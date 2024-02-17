@@ -53,7 +53,7 @@ func handleConnection(conn net.Conn) {
 
 func returnPing(conn net.Conn, received string) {
 	message := []byte("+PONG\r\n")
-	numberOfPing := len(strings.Split(received, "/n")) + 1
+	numberOfPing := len(strings.Split(received, "/n"))
 	for i := 0; i < numberOfPing; i++ {
 		_, err := conn.Write(message)
 		if err != nil {
