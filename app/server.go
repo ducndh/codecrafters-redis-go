@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"strings"
 )
 
 const PING = "*1\r\n$4\r\nping\r\n"
@@ -54,12 +53,17 @@ func handleConnection(conn net.Conn) {
 
 func returnPing(conn net.Conn, received string) {
 	message := []byte("+PONG\r\n")
-	numberOfPing := len(strings.Split(received, "/n"))
-	for i := 0; i < numberOfPing; i++ {
-		_, err := conn.Write(message)
-		if err != nil {
-			fmt.Println("Error pong back to ping command: ", err.Error())
-			os.Exit(1)
-		}
+	_, err := conn.Write(message)
+	if err != nil {
+		fmt.Println("Error pong back to ping command: ", err.Error())
+		os.Exit(1)
 	}
+	// numberOfPing := len(strings.Split(received, "/n"))
+	// for i := 0; i < numberOfPing; i++ {
+	// 	_, err := conn.Write(message)
+	// 	if err != nil {
+	// 		fmt.Println("Error pong back to ping command: ", err.Error())
+	// 		os.Exit(1)
+	// 	}
+	// }
 }
