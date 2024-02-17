@@ -32,22 +32,23 @@ func main() {
 func handleConnection(conn net.Conn) {
 	// close connection when finished
 	defer conn.Close()
+	for {
+		buf := make([]byte, 1024)
+		n, err := conn.Read(buf)
+		if err != nil {
+			fmt.Println("Error reading from connection: ", err.Error())
+			os.Exit(1)
+		}
 
-	buf := make([]byte, 1024)
-	n, err := conn.Read(buf)
-	if err != nil {
-		fmt.Println("Error reading from connection: ", err.Error())
-		os.Exit(1)
-	}
+		fmt.Printf("received %d bytes", n)
+		fmt.Printf("received the following data: %s", string(buf[:n]))
 
-	fmt.Printf("received %d bytes", n)
-	fmt.Printf("received the following data: %s", string(buf[:n]))
-
-	switch received := string(buf[:n]); received {
-	case PING:
-		returnPing(conn, received)
-	default:
-		fmt.Printf("%s.\n", received)
+		switch received := string(buf[:n]); received {
+		case PING:
+			returnPing(conn, received)
+		default:
+			fmt.Printf("%s.\n", received)
+		}
 	}
 }
 
