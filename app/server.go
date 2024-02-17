@@ -4,14 +4,12 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"strings"
 )
 
 const PING = "*1\r\n$4\r\nping\r\n"
 
 func main() {
-	// You can use print statements as follows for debugging, they'll be visible when running tests.
-	fmt.Println("Logs from your program will appear here!")
-
 	listener, err := net.Listen("tcp", "0.0.0.0:6379")
 	if err != nil {
 		fmt.Println("Failed to bind to port 6379")
@@ -19,6 +17,8 @@ func main() {
 	}
 
 	defer listener.Close()
+	fmt.Println("Listening on port 6379")
+
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
@@ -30,6 +30,9 @@ func main() {
 }
 
 func handleConnection(conn net.Conn) {
+	// close connection when finished
+	defer conn.Close()
+
 	buf := make([]byte, 1024)
 	n, err := conn.Read(buf)
 	if err != nil {
@@ -42,19 +45,20 @@ func handleConnection(conn net.Conn) {
 
 	switch received := string(buf[:n]); received {
 	case PING:
-		returnPing(conn)
+		returnPing(conn, received)
 	default:
 		fmt.Printf("%s.\n", received)
 	}
 }
 
-func returnPing(conn net.Conn) {
+func returnPing(conn net.Conn, received string) {
 	message := []byte("+PONG\r\n")
-	n, err := conn.Write(message)
-	if err != nil {
-		fmt.Println("Error pong back to ping command: ", err.Error())
-		os.Exit(1)
+	numberOfPing := len(strings.Split(received, "/n")) + 1
+	for i := 0; i < numberOfPing; i++ {
+		_, err := conn.Write(message)
+		if err != nil {
+			fmt.Println("Error pong back to ping command: ", err.Error())
+			os.Exit(1)
+		}
 	}
-	fmt.Printf("sent %d bytes", n)
-	fmt.Printf("sent the following data: %s", string(message))
 }
