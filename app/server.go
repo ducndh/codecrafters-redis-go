@@ -24,7 +24,7 @@ func main() {
 			fmt.Println("Error accepting connection: ", err.Error())
 			os.Exit(1)
 		}
-		handleConnection(conn)
+		go handleConnection(conn)
 	}
 }
 
@@ -38,32 +38,20 @@ func handleConnection(conn net.Conn) {
 			fmt.Println("Error reading from connection: ", err.Error())
 			os.Exit(1)
 		}
-
-		fmt.Printf("received %d bytes", n)
-		fmt.Printf("received the following data: %s", string(buf[:n]))
-
 		switch received := string(buf[:n]); received {
 		case PING:
-			returnPing(conn, received)
+			returnPing(conn)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
 	}
 }
 
-func returnPing(conn net.Conn, received string) {
+func returnPing(conn net.Conn) {
 	message := []byte("+PONG\r\n")
 	_, err := conn.Write(message)
 	if err != nil {
 		fmt.Println("Error pong back to ping command: ", err.Error())
 		os.Exit(1)
 	}
-	// numberOfPing := len(strings.Split(received, "/n"))
-	// for i := 0; i < numberOfPing; i++ {
-	// 	_, err := conn.Write(message)
-	// 	if err != nil {
-	// 		fmt.Println("Error pong back to ping command: ", err.Error())
-	// 		os.Exit(1)
-	// 	}
-	// }
 }
