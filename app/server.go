@@ -68,6 +68,6 @@ func returnEcho(conn net.Conn, arg string) {
 	}
 }
 
-func redisParser(received string) (command string, arg string, err error) {
+// func redisParser(received string) (command string, arg string, err error) {
 
-}
+// }
