@@ -36,18 +36,20 @@ func handleConnection(conn net.Conn) {
 		buf := make([]byte, 1024)
 		n, err := conn.Read(buf)
 		if err != nil {
-			fmt.Println("Error reading from connection: ", err.Error())
-			os.Exit(1)
+			switch err {
+			case io.EOF:
+				return
+			default:
+				fmt.Println("Error reading from connection: ", err.Error())
+				os.Exit(1)
+			}
 		}
-		if err == io.EOF {
-			return
-		}
-		switch received := string(buf[:n]); received {
-		// switch command := string(received[1]); command {
-		case PING:
+		received := string(buf[:n])
+		switch command := string(received[1]); command {
+		case "1":
 			returnPing(conn)
-		// case "2":
-		// 	returnEcho(conn, received)
+		case "2":
+			returnEcho(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
