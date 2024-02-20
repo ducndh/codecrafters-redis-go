@@ -42,8 +42,8 @@ func handleConnection(conn net.Conn) {
 		// switch command := string(received[1]); command {
 		case PING:
 			returnPing(conn)
-		case "2":
-			returnEcho(conn, received)
+		// case "2":
+		// 	returnEcho(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
