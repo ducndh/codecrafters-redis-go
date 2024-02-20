@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net"
 	"os"
 )
@@ -37,6 +38,9 @@ func handleConnection(conn net.Conn) {
 		if err != nil {
 			fmt.Println("Error reading from connection: ", err.Error())
 			os.Exit(1)
+		}
+		if err == io.EOF {
+			return
 		}
 		switch received := string(buf[:n]); received {
 		// switch command := string(received[1]); command {
