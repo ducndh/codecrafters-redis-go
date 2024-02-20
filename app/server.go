@@ -66,7 +66,7 @@ func returnPing(conn net.Conn) {
 }
 
 func returnEcho(conn net.Conn, arg string) {
-	message := []byte(arg)[10:]
+	message := []byte(arg)[12:]
 	_, err := conn.Write(message)
 	fmt.Printf("%s.\n", message)
 	if err != nil {
