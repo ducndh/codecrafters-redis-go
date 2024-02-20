@@ -68,7 +68,6 @@ func returnPing(conn net.Conn) {
 func returnEcho(conn net.Conn, arg string) {
 	message := []byte("+" + arg[18:] + "\r\n")
 	_, err := conn.Write(message)
-	fmt.Printf("%s.\n", message)
 	if err != nil {
 		fmt.Println("Error pong back to ping command: ", err.Error())
 		os.Exit(1)
