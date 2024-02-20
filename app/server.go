@@ -40,7 +40,7 @@ func handleConnection(conn net.Conn) {
 		}
 		switch received := string(buf[:n]); received {
 		// switch command := string(received[1]); command {
-		case "1":
+		case PING:
 			returnPing(conn)
 		case "2":
 			returnEcho(conn, received)
