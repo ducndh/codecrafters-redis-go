@@ -38,11 +38,12 @@ func handleConnection(conn net.Conn) {
 			fmt.Println("Error reading from connection: ", err.Error())
 			os.Exit(1)
 		}
-		switch received := string(buf[:n]); received {
-		case PING:
+		received := string(buf[:n])
+		switch command := string(received[1]); command {
+		case "1":
 			returnPing(conn)
-		// case ECHO:
-		// 	returnEcho(conn, received)
+		case "2":
+			returnEcho(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
@@ -58,11 +59,15 @@ func returnPing(conn net.Conn) {
 	}
 }
 
-func returnEcho(conn net.Conn, args string) {
-	message := []byte(args)
-	_, err := conn.Write(message)
+func returnEcho(conn net.Conn, arg string) {
+	message := []byte(arg)
+	_, err := conn.Write(message[10:])
 	if err != nil {
 		fmt.Println("Error pong back to ping command: ", err.Error())
 		os.Exit(1)
 	}
+}
+
+func redisParser(received string) (command string, arg string, err error) {
+
 }
