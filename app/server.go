@@ -40,10 +40,10 @@ func handleConnection(conn net.Conn) {
 		}
 		received := string(buf[:n])
 		switch command := string(received[1]); command {
-		// case "1":
-		// 	returnPing(conn)
-		// case "2":
-		// 	returnEcho(conn, received)
+		case "1":
+			returnPing(conn)
+		case "2":
+			returnEcho(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
@@ -53,6 +53,7 @@ func handleConnection(conn net.Conn) {
 func returnPing(conn net.Conn) {
 	message := []byte("+PONG\r\n")
 	_, err := conn.Write(message)
+	fmt.Printf("%s.\n", message)
 	if err != nil {
 		fmt.Println("Error pong back to ping command: ", err.Error())
 		os.Exit(1)
@@ -60,8 +61,9 @@ func returnPing(conn net.Conn) {
 }
 
 func returnEcho(conn net.Conn, arg string) {
-	message := []byte(arg)
-	_, err := conn.Write(message[10:])
+	message := []byte(arg)[10:]
+	_, err := conn.Write(message)
+	fmt.Printf("%s.\n", message)
 	if err != nil {
 		fmt.Println("Error pong back to ping command: ", err.Error())
 		os.Exit(1)
