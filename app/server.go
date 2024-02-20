@@ -38,8 +38,8 @@ func handleConnection(conn net.Conn) {
 			fmt.Println("Error reading from connection: ", err.Error())
 			os.Exit(1)
 		}
-		received := string(buf[:n])
-		switch command := string(received[1]); command {
+		switch received := string(buf[:n]); received {
+		// switch command := string(received[1]); command {
 		case "1":
 			returnPing(conn)
 		case "2":
