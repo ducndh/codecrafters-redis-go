@@ -50,6 +50,8 @@ func handleConnection(conn net.Conn) {
 			returnPing(conn)
 		case "2":
 			returnEcho(conn, received)
+		case "3":
+			returnSet(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
@@ -66,6 +68,15 @@ func returnPing(conn net.Conn) {
 }
 
 func returnEcho(conn net.Conn, arg string) {
+	message := []byte("+" + arg[18:] + "\r\n")
+	_, err := conn.Write(message)
+	if err != nil {
+		fmt.Println("Error pong back to ping command: ", err.Error())
+		os.Exit(1)
+	}
+}
+
+func returnSet(conn net.Conn, arg string) {
 	message := []byte("+" + arg[18:] + "\r\n")
 	_, err := conn.Write(message)
 	if err != nil {
