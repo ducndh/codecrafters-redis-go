@@ -47,18 +47,18 @@ func handleConnection(conn net.Conn) {
 		received := string(buf[:n])
 		switch command := string(received[1]); command {
 		case "1":
-			returnPing(conn)
+			ReturnPing(conn)
 		case "2":
-			returnEcho(conn, received)
+			ReturnEcho(conn, received)
 		case "3":
-			returnSet(conn, received)
+			ReturnSet(conn, received)
 		default:
 			fmt.Printf("%s.\n", received)
 		}
 	}
 }
 
-func returnPing(conn net.Conn) {
+func ReturnPing(conn net.Conn) {
 	message := []byte("+PONG\r\n")
 	_, err := conn.Write(message)
 	if err != nil {
@@ -67,7 +67,7 @@ func returnPing(conn net.Conn) {
 	}
 }
 
-func returnEcho(conn net.Conn, arg string) {
+func ReturnEcho(conn net.Conn, arg string) {
 	message := []byte("+" + arg[18:] + "\r\n")
 	_, err := conn.Write(message)
 	if err != nil {
@@ -76,7 +76,16 @@ func returnEcho(conn net.Conn, arg string) {
 	}
 }
 
-func returnSet(conn net.Conn, arg string) {
+func ReturnGet(conn net.Conn, arg string) {
+	message := []byte("+" + arg[18:] + "\r\n")
+	_, err := conn.Write(message)
+	if err != nil {
+		fmt.Println("Error pong back to ping command: ", err.Error())
+		os.Exit(1)
+	}
+}
+
+func ReturnSet(conn net.Conn, arg string) {
 	message := []byte("+" + arg[18:] + "\r\n")
 	_, err := conn.Write(message)
 	if err != nil {
